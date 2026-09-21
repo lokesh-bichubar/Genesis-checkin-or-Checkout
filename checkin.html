@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Check in & out of The Genesis innovation hub — Quantum University Innovation Council.">
+<title>Check-In Portal — The Genesis</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='5' fill='%2300A3FF'/%3E%3Cellipse cx='20' cy='20' rx='17' ry='7' fill='none' stroke='%2310B981' stroke-width='2' transform='rotate(-30 20 20)'/%3E%3C/svg%3E">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config = { theme: { extend: { colors: { electric: '#00A3FF', emer: '#10B981', abyss: '#04060C' }, fontFamily: { disp: ['Space Grotesk', 'sans-serif'] } } } }</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/genesis.css">
+</head>
+<body class="antialiased overflow-x-hidden">
+<div class="fixed inset-0 -z-10 pointer-events-none">
+  <div class="absolute inset-0 bg-grid"></div>
+  <div class="absolute -top-40 right-1/4 w-[34rem] h-[34rem] bg-glow-em"></div>
+  <div class="absolute top-72 left-0 w-[28rem] h-[28rem] bg-glow-blue"></div>
+</div>
+
+<header class="fixed top-0 inset-x-0 z-40">
+  <nav class="max-w-7xl mx-auto px-4 sm:px-6 mt-4">
+    <div class="glass rounded-2xl px-4 sm:px-5 py-3 flex flex-wrap items-center justify-between gap-3">
+      <a href="index.html" class="flex items-center gap-3">
+        <svg viewBox="0 0 40 40" class="w-9 h-9 shrink-0" fill="none">
+          <defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#38BDF8"/><stop offset="1" stop-color="#10B981"/></linearGradient></defs>
+          <ellipse cx="20" cy="20" rx="17" ry="7" stroke="url(#lg)" stroke-width="1.6" transform="rotate(-30 20 20)" opacity=".9"/>
+          <ellipse cx="20" cy="20" rx="17" ry="7" stroke="url(#lg)" stroke-width="1.6" transform="rotate(30 20 20)" opacity=".55"/>
+          <circle cx="20" cy="20" r="4.5" fill="url(#lg)"/>
+        </svg>
+        <div>
+          <div class="font-disp font-bold text-lg leading-tight">The <span class="grad-text">Genesis</span></div>
+          <div class="text-[10px] tracking-[.2em] uppercase text-slate-500">Quantum University · Innovation Council</div>
+        </div>
+      </a>
+      <div class="hidden md:flex items-center gap-1 text-sm">
+        <a href="index.html" class="navlink">Home</a>
+        <a href="checkin.html" class="navlink active">Check-In Portal</a>
+        <a href="kiosk.html" class="navlink">Kiosk Mode</a>
+        <a href="admin.html" class="navlink">Admin</a>
+      </div>
+      <div class="pill rounded-full px-3 py-1.5 text-xs flex items-center gap-2">
+        <span class="dot-live"></span>
+        <span class="text-slate-300"><b id="navOcc" class="font-disp text-emer">0</b> in hub</span>
+      </div>
+      <div class="flex md:hidden w-full gap-1 text-xs justify-center pt-1">
+        <a href="index.html" class="navlink">Home</a>
+        <a href="checkin.html" class="navlink active">Check-In</a>
+        <a href="kiosk.html" class="navlink">Kiosk</a>
+        <a href="admin.html" class="navlink">Admin</a>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<main class="pt-36 md:pt-40 pb-20 max-w-6xl mx-auto px-4 sm:px-6">
+  <div class="mb-8 fade-up">
+    <h1 class="font-disp text-3xl sm:text-4xl font-bold">Visitor <span class="grad-text">Check-In Portal</span></h1>
+    <p class="text-slate-400 mt-2 text-sm sm:text-base">Use your Unique ID — Roll No, Employee ID, Startup ID or Guest ID (auto-generated if you're new).</p>
+    <div id="kioskBanner" class="hidden mt-4"></div>
+  </div>
+
+  <div class="grid lg:grid-cols-5 gap-6 items-start">
+
+    <!-- ============ MAIN CARD ============ -->
+    <div class="lg:col-span-3 glass rounded-3xl p-6 sm:p-8 fade-up" id="mainCard">
+
+      <!-- tabs -->
+      <div id="tabs" class="grid grid-cols-2 gap-2 p-1.5 rounded-2xl bg-slate-900/60 border border-slate-700/40 mb-7">
+        <button id="tabIn" class="rounded-xl py-2.5 text-sm font-semibold transition-all">Check In</button>
+        <button id="tabOut" class="rounded-xl py-2.5 text-sm font-semibold transition-all">Check Out</button>
+      </div>
+
+      <!-- ========== CHECK-IN FORM ========== -->
+      <form id="inForm" autocomplete="off" novalidate>
+        <label class="lbl">I am a</label>
+        <div id="roleRow" class="grid grid-cols-4 gap-2 mb-6"></div>
+
+        <div class="grid sm:grid-cols-2 gap-5">
+          <div>
+            <label class="lbl" for="uid" id="uidLabel">Unique ID</label>
+            <input id="uid" class="input font-mono tracking-wide uppercase" placeholder="QU-CS-23-1042" maxlength="24">
+            <p id="uidHint" class="text-[11px] text-slate-500 mt-1.5">Your university Roll No.</p>
+            <p id="knownHint" class="hidden text-[11px] text-emerald-400 mt-1.5 flex items-center gap-1">
+              <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Welcome back — details auto-filled.
+            </p>
+          </div>
+          <div>
+            <label class="lbl" for="name">Full Name</label>
+            <input id="name" class="input" placeholder="e.g. Aarav Sharma" maxlength="60">
+          </div>
+        </div>
+
+        <div class="mt-5">
+          <label class="lbl" for="purpose">Purpose of visit</label>
+          <select id="purpose" class="input"></select>
+        </div>
+
+        <div id="formMsg" class="hidden mt-5 text-sm rounded-xl px-4 py-3"></div>
+
+        <button type="submit" class="btn-primary w-full rounded-xl py-4 mt-7 text-base font-disp font-bold tracking-wide">
+          CHECK IN →
+        </button>
+        <p class="text-center text-[11px] text-slate-500 mt-4">All sessions auto-close at 7:00 PM IST · duplicate check-ins are blocked by Unique ID</p>
+      </form>
+
+      <!-- ========== CHECK-OUT FORM ========== -->
+      <form id="outForm" class="hidden" autocomplete="off" novalidate>
+        <label class="lbl" for="outUid">Unique ID</label>
+        <div class="flex gap-2.5">
+          <input id="outUid" class="input font-mono tracking-wide uppercase" placeholder="Enter the ID you checked in with" maxlength="24">
+          <button type="button" id="findBtn" class="btn-ghost rounded-xl px-5 text-sm whitespace-nowrap">Find</button>
+        </div>
+        <div id="sessionCard" class="mt-6"></div>
+      </form>
+
+      <!-- ========== SUCCESS PASS ========== -->
+      <div id="passView" class="hidden text-center">
+        <div class="w-16 h-16 mx-auto rounded-full bg-emerald-400/15 border border-emerald-400/50 flex items-center justify-center glow-em">
+          <svg class="w-8 h-8 text-emerald-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h2 class="font-disp text-2xl font-bold mt-5">You're checked in!</h2>
+        <p class="text-slate-400 text-sm mt-1" id="passSub">Welcome to The Genesis hub.</p>
+        <div class="glass rounded-2xl p-5 mt-6 max-w-sm mx-auto glow-em text-left">
+          <div class="flex justify-between text-xs text-slate-500 mb-1"><span>UNIQUE ID</span><span id="passTime"></span></div>
+          <div id="passUid" class="font-mono font-bold text-xl text-emerald-300 tracking-wider"></div>
+          <div id="passName" class="font-disp font-semibold mt-2"></div>
+          <div class="flex gap-2 mt-3 flex-wrap" id="passTags"></div>
+          <div id="passEntry" class="text-[10px] text-slate-600 font-mono mt-4"></div>
+        </div>
+        <p class="text-xs text-amber-300/90 mt-5">Remember to check out — or we'll auto-close your session at 7:00 PM IST.</p>
+        <div class="h-1 rounded-full bg-slate-800 mt-5 overflow-hidden max-w-sm mx-auto"><div id="resetBar" class="h-full bg-gradient-to-r from-sky-400 to-emerald-400" style="width:100%"></div></div>
+        <button id="againBtn" class="btn-ghost rounded-xl px-6 py-3 mt-4 text-sm">New check-in</button>
+      </div>
+
+      <!-- ========== CHECKOUT SUCCESS ========== -->
+      <div id="outDone" class="hidden text-center">
+        <div class="w-16 h-16 mx-auto rounded-full bg-sky-400/15 border border-sky-400/50 flex items-center justify-center glow-blue">
+          <svg class="w-8 h-8 text-sky-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h2 class="font-disp text-2xl font-bold mt-5">Checked out</h2>
+        <p class="text-slate-400 text-sm mt-1" id="outSub"></p>
+        <button id="outAgainBtn" class="btn-ghost rounded-xl px-6 py-3 mt-6 text-sm">Done</button>
+      </div>
+    </div>
+
+    <!-- ============ SIDE PANEL ============ -->
+    <div class="lg:col-span-2 space-y-5">
+      <div class="glass rounded-2xl p-5 fade-up" style="animation-delay:.1s">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="font-disp font-semibold text-sm flex items-center gap-2 text-slate-200"><span class="dot-live"></span>Inside right now</h3>
+          <span id="sideCount" class="font-disp font-bold text-emer text-lg tabular-nums">0</span>
+        </div>
+        <div id="sideList" class="space-y-2 max-h-64 overflow-y-auto pr-1"></div>
+      </div>
+      <div class="glass rounded-2xl p-5 fade-up" style="animation-delay:.2s">
+        <h3 class="font-disp font-semibold text-sm text-slate-200 mb-3">Hub hours</h3>
+        <div class="flex items-center justify-between text-sm">
+          <span class="text-slate-400">Mon – Sat</span><span class="font-disp text-slate-200">8:00 AM – 7:00 PM IST</span>
+        </div>
+        <div class="mt-3 h-2 rounded-full bg-slate-800 overflow-hidden"><div id="dayBar" class="h-full bg-gradient-to-r from-sky-500 to-emerald-400" style="width:0%"></div></div>
+        <div class="flex justify-between text-[10px] text-slate-500 mt-1"><span>8 AM</span><span id="dayPct" class="text-slate-400"></span><span>7 PM</span></div>
+        <p class="text-[11px] text-slate-500 mt-3 leading-relaxed">Every open session is closed automatically at 7:00 PM IST and flagged <span class="text-amber-300 font-mono">auto_checkout</span> in the logs.</p>
+      </div>
+      <div class="glass rounded-2xl p-5 fade-up" style="animation-delay:.3s">
+        <h3 class="font-disp font-semibold text-sm text-slate-200 mb-2">ID cheat-sheet</h3>
+        <div class="text-xs text-slate-400 space-y-1.5">
+          <div class="flex justify-between"><span>Students</span><code class="text-sky-300">QU-CS-23-1042</code></div>
+          <div class="flex justify-between"><span>Faculty</span><code class="text-violet-300">EMP-2011-034</code></div>
+          <div class="flex justify-between"><span>Founders</span><code class="text-emerald-300">FND-QAI-07</code></div>
+          <div class="flex justify-between"><span>Guests</span><code class="text-amber-300">GST-XXXXXXXX</code></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div id="toasts"></div>
+
+<script src="js/genesis.js"></script>
+<script>
+(function () {
+  'use strict';
+  Genesis.startSweep(30000);
+  var $ = function (id) { return document.getElementById(id); };
+
+  /* ---------- toast ---------- */
+  window.toast = function (msg, kind) {
+    var d = document.createElement('div');
+    d.className = 'toast ' + (kind || 'info'); d.textContent = msg;
+    $('toasts').appendChild(d);
+    setTimeout(function () { d.style.opacity = '0'; d.style.transition = 'opacity .4s'; setTimeout(function () { d.remove(); }, 400); }, 4200);
+  };
+
+  /* ---------- kiosk token banner ---------- */
+  var qs = new URLSearchParams(location.search), kTok = qs.get('k'), kioskOK = kTok && Genesis.kioskValid(kTok);
+  if (kTok) {
+    var b = $('kioskBanner');
+    b.classList.remove('hidden');
+    if (kioskOK) {
+      b.innerHTML = '<div class="badge b-kiosk !text-xs !normal-case !tracking-normal !font-semibold px-4 py-2 rounded-xl"><svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/></svg>Touchless kiosk link verified — welcome!</div>';
+    } else {
+      b.innerHTML = '<div class="badge b-auto !text-xs !normal-case !tracking-normal !font-semibold px-4 py-2 rounded-xl">This kiosk QR expired — rescan the entrance screen, or simply check in below.</div>';
+    }
+  }
+
+  /* ---------- purpose select ---------- */
+  $('purpose').innerHTML = Genesis.PURPOSES.map(function (p) { return '<option>' + p + '</option>'; }).join('');
+
+  /* ---------- role pills ---------- */
+  var ROLE_META = {
+    Student: { ph: 'QU-CS-23-1042', hint: 'Your university Roll No.' },
+    Faculty: { ph: 'EMP-2011-034', hint: 'Your Employee ID issued by QU HR.' },
+    Founder: { ph: 'FND-QAI-07', hint: 'Your incubation Startup ID.' },
+    Guest: { ph: 'Leave blank — auto-generated', hint: 'No ID yet? We\'ll mint a Guest ID for you automatically.' }
+  };
+  var ROLE_ICON = {
+    Student: '<path d="M22 9L12 4 2 9l10 5 8-4v5h2V9zM6 12.5V16c0 1.7 2.7 3 6 3s6-1.3 6-3v-3.5l-6 3-6-3z"/>',
+    Faculty: '<path d="M20 7h-4V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2H4a2 2 0 00-2 2v10a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2zM10 5h4v2h-4V5z"/>',
+    Founder: '<path d="M12 2l2.4 5.3L20 8l-4 4 1 5.7L12 15l-5 2.7L8 12 4 8l5.6-.7L12 2z"/>',
+    Guest: '<path fill="none" stroke="currentColor" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM4 21v-1a6 6 0 016-6h4a6 6 0 016 6v1" stroke-linecap="round"/>'
+  };
+  var role = 'Student';
+  function drawRoles() {
+    $('roleRow').innerHTML = Genesis.ROLES.map(function (r) {
+      return '<button type="button" data-role="' + r + '" class="role-pill' + (r === role ? ' on' : '') + '">'
+        + '<svg viewBox="0 0 24 24" class="w-4 h-4 mx-auto mb-1" fill="currentColor">' + ROLE_ICON[r] + '</svg>' + r + '</button>';
+    }).join('');
+    $('uid').placeholder = ROLE_META[role].ph;
+    $('uidHint').textContent = ROLE_META[role].hint;
+  }
+  drawRoles();
+  $('roleRow').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-role]'); if (!b) return;
+    role = b.dataset.role; drawRoles();
+  });
+
+  /* ---------- tabs ---------- */
+  function setTab(inMode) {
+    $('inForm').classList.toggle('hidden', !inMode);
+    $('outForm').classList.toggle('hidden', inMode);
+    $('passView').classList.add('hidden'); $('outDone').classList.add('hidden');
+    $('tabs').classList.remove('hidden');
+    var on = 'background:linear-gradient(92deg,#0EA5E9,#10B981);color:#02131C;';
+    $('tabIn').style.cssText = inMode ? on : ''; $('tabOut').style.cssText = !inMode ? on : '';
+  }
+  $('tabIn').onclick = function () { setTab(true); };
+  $('tabOut').onclick = function () { setTab(false); };
+  setTab(true);
+
+  /* ---------- live status of typed UID ---------- */
+  function formMsg(html, kind) {
+    var m = $('formMsg');
+    if (!html) { m.classList.add('hidden'); return; }
+    m.classList.remove('hidden');
+    m.className = 'mt-5 text-sm rounded-xl px-4 py-3 ' + (kind === 'err'
+      ? 'bg-rose-500/10 border border-rose-500/40 text-rose-200'
+      : kind === 'warn' ? 'bg-amber-500/10 border border-amber-500/40 text-amber-200'
+      : 'bg-emerald-500/10 border border-emerald-500/40 text-emerald-200');
+    m.innerHTML = html;
+  }
+  $('uid').addEventListener('input', function () {
+    var v = this.value.trim().toUpperCase();
+    var rec = Genesis.lookup(v);
+    $('knownHint').classList.toggle('hidden', !rec);
+    if (rec) { $('name').value = rec.name; $('purpose').value = rec.purpose; if (Genesis.ROLES.indexOf(rec.role) >= 0) { role = rec.role; drawRoles(); } }
+    var act = Genesis.getLogs().find(function (l) { return !l.checkOut && l.uid === v; });
+    if (act) formMsg('This ID is <b>already checked in</b> since ' + Genesis.pretty(act.checkIn) + '. <button type="button" id="goOut" class="underline font-semibold">Check out instead →</button>', 'warn');
+    else formMsg(null);
+    var go = $('goOut');
+    if (go) go.onclick = function () { $('outUid').value = v; findSession(); setTab(false); };
+  });
+
+  /* ---------- check-in submit ---------- */
+  $('inForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var res = Genesis.checkIn({
+      uid: $('uid').value, name: $('name').value, role: role,
+      purpose: $('purpose').value, src: kioskOK ? 'kiosk' : 'web'
+    });
+    if (!res.ok) {
+      if (res.code === 'duplicate') {
+        formMsg('<b>Already inside.</b> ' + res.active.name + ' checked in at ' + Genesis.pretty(res.active.checkIn) + '. <button type="button" id="dupOut" class="underline font-semibold">Check out →</button>', 'warn');
+        $('dupOut').onclick = function () { $('outUid').value = res.active.uid; findSession(); setTab(false); };
+      } else { formMsg(res.msg, 'err'); }
+      return;
+    }
+    showPass(res.entry);
+  });
+
+  /* ---------- success pass ---------- */
+  var resetTimer = null;
+  function showPass(en) {
+    $('inForm').classList.add('hidden'); $('tabs').classList.add('hidden');
+    $('passView').classList.remove('hidden');
+    $('passUid').textContent = en.uid;
+    $('passName').textContent = en.name;
+    $('passTime').textContent = Genesis.pretty(en.checkIn) + ' IST';
+    $('passEntry').textContent = 'ENTRY ' + en.id + (en.src === 'kiosk' ? ' · via kiosk QR' : ' · via web');
+    $('passSub').textContent = en.role === 'Guest' ? 'Save your Guest ID — you\'ll need it to check out.' : 'Welcome back to The Genesis hub.';
+    $('passTags').innerHTML = '<span class="badge b-active">' + en.role + '</span><span class="badge b-kiosk">' + en.purpose + '</span>';
+    var bar = $('resetBar'), t0 = Date.now();
+    bar.style.transition = 'none'; bar.style.width = '100%';
+    requestAnimationFrame(function () { bar.style.transition = 'width 9s linear'; bar.style.width = '0%'; });
+    clearTimeout(resetTimer);
+    resetTimer = setTimeout(reset, 9000);
+  }
+  function reset() {
+    clearTimeout(resetTimer);
+    $('passView').classList.add('hidden'); $('outDone').classList.add('hidden');
+    $('inForm').reset(); $('uid').value = ''; formMsg(null);
+    drawRoles(); setTab(true); renderSide();
+  }
+  $('againBtn').onclick = reset;
+
+  /* ---------- check-out ---------- */
+  var found = null;
+  function findSession() {
+    var uid = $('outUid').value.trim().toUpperCase();
+    var l = Genesis.getLogs().find(function (x) { return !x.checkOut && x.uid === uid; });
+    found = l || null;
+    var c = $('sessionCard');
+    if (!uid) { c.innerHTML = ''; return; }
+    if (!l) {
+      c.innerHTML = '<div class="rounded-xl px-4 py-3 text-sm bg-rose-500/10 border border-rose-500/40 text-rose-200">No active session found for <b class="font-mono">' + uid + '</b>.</div>';
+      return;
+    }
+    c.innerHTML = '<div class="glass rounded-2xl p-5 fade-up">'
+      + '<div class="flex items-center justify-between"><div><div class="font-disp font-bold text-lg">' + l.name + '</div>'
+      + '<div class="text-xs text-slate-400 font-mono">' + l.uid + '</div></div>'
+      + '<span class="badge b-active">' + l.role + '</span></div>'
+      + '<div class="grid grid-cols-3 gap-3 mt-4 text-center text-xs">'
+      + '<div class="pill rounded-xl py-2.5"><div class="text-slate-500 mb-0.5">CHECKED IN</div><div class="font-disp font-semibold text-sky-300">' + Genesis.pretty(l.checkIn) + '</div></div>'
+      + '<div class="pill rounded-xl py-2.5"><div class="text-slate-500 mb-0.5">ELAPSED</div><div class="font-disp font-semibold text-slate-200" id="elaps">' + Genesis.fmtDur(Genesis.durationMin(l)) + '</div></div>'
+      + '<div class="pill rounded-xl py-2.5"><div class="text-slate-500 mb-0.5">PURPOSE</div><div class="font-semibold text-emerald-300 text-[11px] leading-tight pt-0.5">' + l.purpose + '</div></div></div>'
+      + '<button type="button" id="coBtn" class="btn-primary w-full rounded-xl py-3.5 mt-5 text-sm font-bold">CHECK OUT →</button></div>';
+    $('coBtn').onclick = function () {
+      var r = Genesis.checkOut(uid);
+      if (r.ok) {
+        $('outForm').classList.add('hidden'); $('tabs').classList.add('hidden');
+        $('outDone').classList.remove('hidden');
+        $('outSub').textContent = r.entry.name + ' · stayed ' + Genesis.fmtDur(Genesis.durationMin(r.entry)) + ' · checked out ' + Genesis.pretty(r.entry.checkOut) + ' IST';
+        toast('Checked out. Thanks for visiting!', 'ok');
+        renderSide();
+      } else toast(r.msg, 'err');
+    };
+  }
+  $('findBtn').onclick = findSession;
+  $('outUid').addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); findSession(); } });
+  $('outAgainBtn').onclick = function () { $('outUid').value = ''; $('sessionCard').innerHTML = ''; found = null; setTab(true); };
+  // deep-link: checkin.html?out=UID
+  if (qs.get('out')) { $('outUid').value = qs.get('out'); findSession(); setTab(false); }
+
+  /* ---------- side panel ---------- */
+  function renderSide() {
+    var act = Genesis.active();
+    $('sideCount').textContent = act.length;
+    $('navOcc').textContent = act.length;
+    $('sideList').innerHTML = act.length ? act.slice(0, 12).map(function (l) {
+      return '<div class="flex items-center justify-between text-sm pill rounded-xl px-3 py-2">'
+        + '<div><span class="font-medium text-slate-200">' + l.name.split(' ')[0] + ' ' + (l.name.split(' ')[1] ? l.name.split(' ')[1][0] + '.' : '') + '</span>'
+        + '<span class="text-xs text-slate-500 ml-2">' + l.role + '</span></div>'
+        + '<span class="text-xs text-slate-400 tabular-nums">' + Genesis.fmtDur(Genesis.durationMin(l)) + '</span></div>';
+    }).join('') : '<div class="text-sm text-slate-500 py-2">The hub is empty right now.</div>';
+  }
+  function dayProgress() {
+    var now = Date.now(), o = Genesis.openEpoch(), c = Genesis.closeEpoch();
+    var p = Math.max(0, Math.min(1, (now - o) / (c - o)));
+    $('dayBar').style.width = (p * 100).toFixed(1) + '%';
+    $('dayPct').textContent = p <= 0 ? 'opens 8 AM' : p >= 1 ? 'closed' : Math.round(p * 100) + '% of the day';
+  }
+  renderSide(); dayProgress();
+  setInterval(function () {
+    renderSide(); dayProgress();
+    var e = $('elaps'); if (e && found) e.textContent = Genesis.fmtDur(Genesis.durationMin(found));
+  }, 15000);
+  Genesis.onUpdate(renderSide);
+})();
+</script>
+</body>
+</html>

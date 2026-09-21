@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Admin dashboard — The Genesis hub visitor analytics & management.">
+<title>Admin Dashboard — The Genesis</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='5' fill='%2300A3FF'/%3E%3Cellipse cx='20' cy='20' rx='17' ry='7' fill='none' stroke='%2310B981' stroke-width='2' transform='rotate(-30 20 20)'/%3E%3C/svg%3E">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config = { theme: { extend: { colors: { electric: '#00A3FF', emer: '#10B981', abyss: '#04060C' }, fontFamily: { disp: ['Space Grotesk', 'sans-serif'] } } } }</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/genesis.css">
+</head>
+<body class="antialiased overflow-x-hidden">
+<div class="fixed inset-0 -z-10 pointer-events-none">
+  <div class="absolute inset-0 bg-grid"></div>
+  <div class="absolute -top-40 left-1/3 w-[34rem] h-[34rem] bg-glow-blue"></div>
+</div>
+
+<header class="fixed top-0 inset-x-0 z-40">
+  <nav class="max-w-7xl mx-auto px-4 sm:px-6 mt-4">
+    <div class="glass rounded-2xl px-4 sm:px-5 py-3 flex flex-wrap items-center justify-between gap-3">
+      <a href="index.html" class="flex items-center gap-3">
+        <svg viewBox="0 0 40 40" class="w-9 h-9 shrink-0" fill="none">
+          <defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#38BDF8"/><stop offset="1" stop-color="#10B981"/></linearGradient></defs>
+          <ellipse cx="20" cy="20" rx="17" ry="7" stroke="url(#lg)" stroke-width="1.6" transform="rotate(-30 20 20)" opacity=".9"/>
+          <ellipse cx="20" cy="20" rx="17" ry="7" stroke="url(#lg)" stroke-width="1.6" transform="rotate(30 20 20)" opacity=".55"/>
+          <circle cx="20" cy="20" r="4.5" fill="url(#lg)"/>
+        </svg>
+        <div>
+          <div class="font-disp font-bold text-lg leading-tight">The <span class="grad-text">Genesis</span></div>
+          <div class="text-[10px] tracking-[.2em] uppercase text-slate-500">Quantum University · Innovation Council</div>
+        </div>
+      </a>
+      <div class="hidden md:flex items-center gap-1 text-sm">
+        <a href="index.html" class="navlink">Home</a>
+        <a href="checkin.html" class="navlink">Check-In Portal</a>
+        <a href="kiosk.html" class="navlink">Kiosk Mode</a>
+        <a href="admin.html" class="navlink active">Admin</a>
+      </div>
+      <div class="pill rounded-full px-3 py-1.5 text-xs flex items-center gap-2">
+        <span class="dot-live"></span>
+        <span class="text-slate-300"><b id="navOcc" class="font-disp text-emer">0</b> in hub</span>
+      </div>
+      <div class="flex md:hidden w-full gap-1 text-xs justify-center pt-1">
+        <a href="index.html" class="navlink">Home</a>
+        <a href="checkin.html" class="navlink">Check-In</a>
+        <a href="kiosk.html" class="navlink">Kiosk</a>
+        <a href="admin.html" class="navlink active">Admin</a>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<!-- ============ PASSCODE GATE ============ -->
+<div id="gate" class="pt-44 pb-24 px-4">
+  <div class="max-w-sm mx-auto glass rounded-3xl p-8 text-center glow-blue fade-up">
+    <div class="w-14 h-14 mx-auto rounded-2xl bg-sky-400/10 border border-sky-400/30 flex items-center justify-center mb-5">
+      <svg class="w-6 h-6 text-sky-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 118 0v3" stroke-linecap="round"/></svg>
+    </div>
+    <h1 class="font-disp text-xl font-bold">Admin Access</h1>
+    <p class="text-slate-400 text-sm mt-1.5 mb-6">Enter the council passcode to open the dashboard.</p>
+    <input id="pw" type="password" class="input text-center font-mono tracking-widest" placeholder="••••••••••" autocomplete="off">
+    <p id="pwErr" class="hidden text-rose-300 text-xs mt-2">Incorrect passcode.</p>
+    <button id="pwBtn" class="btn-primary w-full rounded-xl py-3 mt-5 text-sm font-bold">UNLOCK DASHBOARD</button>
+    <p class="text-[10px] text-slate-600 mt-4">Demo build — default passcode QUIC-ADMIN (change it in admin.html).</p>
+  </div>
+</div>
+
+<!-- ============ DASHBOARD ============ -->
+<main id="dash" class="hidden pt-36 md:pt-40 pb-20 max-w-7xl mx-auto px-4 sm:px-6">
+  <div class="flex flex-wrap items-end justify-between gap-4 mb-7">
+    <div>
+      <h1 class="font-disp text-3xl sm:text-4xl font-bold">Admin <span class="grad-text">Dashboard</span></h1>
+      <p class="text-slate-400 mt-1 text-sm">Real-time hub operations · <span id="clockLine" class="tabular-nums"></span></p>
+    </div>
+    <div class="flex flex-wrap gap-2">
+      <button id="btnCSV" class="btn-primary rounded-xl px-4 py-2.5 text-xs sm:text-sm inline-flex items-center gap-2">
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Export CSV
+      </button>
+      <button id="btnLock" class="btn-ghost rounded-xl px-4 py-2.5 text-xs sm:text-sm">Lock</button>
+    </div>
+  </div>
+
+  <!-- stat cards -->
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+    <div class="glass rounded-2xl p-5"><div class="flex items-center gap-2 text-[11px] uppercase tracking-widest text-slate-500 mb-2"><span class="dot-live"></span>Active now</div><div id="stActive" class="font-disp font-bold text-3xl text-emer tabular-nums">0</div></div>
+    <div class="glass rounded-2xl p-5"><div class="text-[11px] uppercase tracking-widest text-slate-500 mb-2">Visits today</div><div id="stToday" class="font-disp font-bold text-3xl text-sky-300 tabular-nums">0</div></div>
+    <div class="glass rounded-2xl p-5"><div class="text-[11px] uppercase tracking-widest text-slate-500 mb-2">Total log entries</div><div id="stTotal" class="font-disp font-bold text-3xl text-slate-100 tabular-nums">0</div></div>
+    <div class="glass rounded-2xl p-5"><div class="text-[11px] uppercase tracking-widest text-slate-500 mb-2">Avg stay (completed)</div><div id="stAvg" class="font-disp font-bold text-3xl text-violet-300 tabular-nums">—</div></div>
+  </div>
+
+  <!-- active visitors -->
+  <div class="glass rounded-2xl p-5 sm:p-6 mb-6">
+    <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+      <h2 class="font-disp font-bold flex items-center gap-2"><span class="dot-live"></span>Active Visitors <span id="actN" class="badge b-active">0</span></h2>
+      <div class="flex gap-2">
+        <button id="btnSweep" class="btn-ghost rounded-xl px-3.5 py-2 text-xs" title="Runs the 7:00 PM IST auto-checkout engine immediately">Run auto-checkout sweep</button>
+        <button id="btnAll" class="btn-ghost rounded-xl px-3.5 py-2 text-xs !border-rose-400/40 hover:!border-rose-400 hover:!text-rose-300">Check out everyone</button>
+      </div>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="tbl min-w-[640px]">
+        <thead><tr><th>Visitor</th><th>Unique ID</th><th>Role</th><th>Purpose</th><th>Since (IST)</th><th>Elapsed</th><th></th></tr></thead>
+        <tbody id="activeRows"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- analytics -->
+  <div class="grid lg:grid-cols-3 gap-4 mb-6">
+    <div class="glass rounded-2xl p-5 sm:p-6">
+      <h2 class="font-disp font-bold mb-1">Purpose breakdown</h2>
+      <p class="text-[11px] text-slate-500 mb-5">all recorded visits</p>
+      <div class="flex items-center gap-5">
+        <div class="relative w-32 h-32 sm:w-36 sm:h-36 shrink-0 rounded-full" id="donut">
+          <div class="donut-hole"><span id="donutTotal" class="font-disp font-bold text-2xl">0</span><span class="text-[10px] text-slate-500 uppercase tracking-widest">visits</span></div>
+        </div>
+        <div id="legend" class="flex-1 space-y-1.5 text-xs min-w-0"></div>
+      </div>
+    </div>
+    <div class="glass rounded-2xl p-5 sm:p-6">
+      <h2 class="font-disp font-bold mb-1">Peak hours</h2>
+      <p class="text-[11px] text-slate-500 mb-5">check-ins by hour (IST) · all time</p>
+      <div id="hourChart" class="flex items-end gap-1.5 h-36"></div>
+      <div class="flex justify-between text-[10px] text-slate-600 mt-1.5 px-0.5"><span>8 AM</span><span>12 PM</span><span>4 PM</span><span>7 PM</span></div>
+    </div>
+    <div class="glass rounded-2xl p-5 sm:p-6">
+      <h2 class="font-disp font-bold mb-1">Role mix & auto-checkout</h2>
+      <p class="text-[11px] text-slate-500 mb-5">who uses the hub</p>
+      <div id="roleBars" class="space-y-3"></div>
+      <div class="mt-5 pt-4 border-t border-slate-700/40 flex items-center justify-between text-sm">
+        <span class="text-slate-400 text-xs">Sessions auto-closed at 7 PM</span>
+        <span class="font-disp font-bold text-amber-300" id="autoN">0</span>
+      </div>
+      <div class="mt-2 flex items-center justify-between text-sm">
+        <span class="text-slate-400 text-xs">Via kiosk QR</span>
+        <span class="font-disp font-bold text-sky-300" id="kioskN">0</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- log explorer -->
+  <div class="glass rounded-2xl p-5 sm:p-6 mb-6">
+    <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
+      <h2 class="font-disp font-bold">Log Explorer</h2>
+      <span class="text-xs text-slate-500"><span id="fltN" class="text-sky-300 font-semibold">0</span> matching records</span>
+    </div>
+    <div class="grid grid-cols-2 md:grid-cols-5 gap-2.5 mb-5">
+      <div><label class="lbl">Date</label><input type="date" id="fDate" class="input !py-2.5 text-sm"></div>
+      <div><label class="lbl">Purpose</label><select id="fPurpose" class="input !py-2.5 text-sm"><option value="">All</option></select></div>
+      <div><label class="lbl">Role</label><select id="fRole" class="input !py-2.5 text-sm"><option value="">All</option></select></div>
+      <div><label class="lbl">Status</label><select id="fStatus" class="input !py-2.5 text-sm"><option value="">All</option><option value="active">Active</option><option value="done">Checked out</option><option value="auto">Auto check-out</option></select></div>
+      <div><label class="lbl">Search</label><input id="fQ" class="input !py-2.5 text-sm" placeholder="name / ID…"></div>
+    </div>
+    <div class="overflow-x-auto max-h-[26rem] overflow-y-auto">
+      <table class="tbl min-w-[820px]">
+        <thead class="sticky top-0 bg-[#0B1220]/95 backdrop-blur"><tr><th>Date</th><th>Visitor</th><th>Unique ID</th><th>Role</th><th>Purpose</th><th>In</th><th>Out</th><th>Duration</th><th>Status</th><th></th></tr></thead>
+        <tbody id="logRows"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- data management -->
+  <div class="glass rounded-2xl p-5 sm:p-6">
+    <h2 class="font-disp font-bold mb-1">Data management</h2>
+    <p class="text-[11px] text-slate-500 mb-5">stored in this browser's LocalStorage · export before clearing</p>
+    <div class="flex flex-wrap gap-2.5">
+      <button id="btnSeed" class="btn-ghost rounded-xl px-4 py-2.5 text-xs sm:text-sm">Generate demo dataset</button>
+      <button id="btnCSVall" class="btn-ghost rounded-xl px-4 py-2.5 text-xs sm:text-sm">Export ALL logs (CSV)</button>
+      <button id="btnClear" class="btn-ghost rounded-xl px-4 py-2.5 text-xs sm:text-sm !border-rose-400/40 hover:!border-rose-400 hover:!text-rose-300">Erase all data</button>
+    </div>
+  </div>
+</main>
+
+<div id="toasts"></div>
+
+<script src="js/genesis.js"></script>
+<script>
+(function () {
+  'use strict';
+  var $ = function (id) { return document.getElementById(id); };
+  var ADMIN_PW = 'QUIC-ADMIN'; // ← change me
+
+  window.toast = function (msg, kind) {
+    var d = document.createElement('div');
+    d.className = 'toast ' + (kind || 'info'); d.textContent = msg;
+    $('toasts').appendChild(d);
+    setTimeout(function () { d.style.opacity = '0'; d.style.transition = 'opacity .4s'; setTimeout(function () { d.remove(); }, 400); }, 4200);
+  };
+
+  /* ---------- gate ---------- */
+  function unlock() {
+    if ($('pw').value.trim().toUpperCase() !== ADMIN_PW) { $('pwErr').classList.remove('hidden'); return; }
+    sessionStorage.setItem('genesis.admin', '1');
+    $('gate').classList.add('hidden'); $('dash').classList.remove('hidden');
+    boot();
+  }
+  $('pwBtn').onclick = unlock;
+  $('pw').addEventListener('keydown', function (e) { if (e.key === 'Enter') unlock(); });
+  $('btnLock').onclick = function () { sessionStorage.removeItem('genesis.admin'); location.reload(); };
+  if (sessionStorage.getItem('genesis.admin')) { $('gate').classList.add('hidden'); $('dash').classList.remove('hidden'); boot(); }
+
+  /* ---------- filters ---------- */
+  var F = { date: '', purpose: '', role: '', status: '', q: '' };
+  $('fPurpose').innerHTML = '<option value="">All</option>' + Genesis.PURPOSES.map(function (p) { return '<option>' + p + '</option>'; }).join('');
+  $('fRole').innerHTML = '<option value="">All</option>' + Genesis.ROLES.map(function (r) { return '<option>' + r + '</option>'; }).join('');
+  ['fDate', 'fPurpose', 'fRole', 'fStatus'].forEach(function (id) {
+    $(id).addEventListener('change', function () { F[id.slice(1).toLowerCase()] = this.value; renderAll(); });
+  });
+  $('fQ').addEventListener('input', function () { F.q = this.value.trim().toLowerCase(); renderLogs(); });
+
+  function filtered() {
+    return Genesis.getLogs().filter(function (l) {
+      if (F.date && l.date !== F.date) return false;
+      if (F.purpose && l.purpose !== F.purpose) return false;
+      if (F.role && l.role !== F.role) return false;
+      if (F.status === 'active' && l.checkOut) return false;
+      if (F.status === 'done' && (!l.checkOut || l.autoCheckout)) return false;
+      if (F.status === 'auto' && !l.autoCheckout) return false;
+      if (F.q) {
+        var hay = (l.name + ' ' + l.uid + ' ' + l.id).toLowerCase();
+        if (hay.indexOf(F.q) < 0) return false;
+      }
+      return true;
+    });
+  }
+
+  /* ---------- renderers ---------- */
+  var COLORS = ['#0EA5E9', '#10B981', '#8B5CF6', '#F59E0B', '#EC4899', '#22D3EE', '#84CC16', '#64748B'];
+
+  function badge(l) {
+    if (!l.checkOut) return '<span class="badge b-active">Active</span>';
+    if (l.autoCheckout) return '<span class="badge b-auto">Auto 7PM</span>';
+    if (l.forced) return '<span class="badge b-forced">Forced</span>';
+    return '<span class="badge b-done">Done</span>';
+  }
+
+  function renderStats() {
+    var logs = Genesis.getLogs(), act = logs.filter(function (l) { return !l.checkOut; });
+    var today = Genesis.dateStr();
+    var todays = logs.filter(function (l) { return l.date === today; });
+    $('stActive').textContent = act.length;
+    $('stToday').textContent = todays.length;
+    $('stTotal').textContent = logs.length;
+    var nav = $('navOcc'); if (nav) nav.textContent = act.length;
+    var done = logs.filter(function (l) { return l.checkOut; });
+    $('stAvg').textContent = done.length ? Genesis.fmtDur(Math.round(done.reduce(function (s, l) { return s + Genesis.durationMin(l); }, 0) / done.length)) : '—';
+  }
+
+  function renderActive() {
+    var act = Genesis.active();
+    $('actN').textContent = act.length;
+    $('activeRows').innerHTML = act.length ? act.map(function (l) {
+      return '<tr><td><span class="font-medium text-slate-100">' + l.name + '</span></td>'
+        + '<td class="font-mono text-xs text-sky-300">' + l.uid + '</td>'
+        + '<td class="text-slate-300">' + l.role + '</td>'
+        + '<td class="text-slate-400">' + l.purpose + '</td>'
+        + '<td class="tabular-nums text-slate-300">' + Genesis.pretty(l.checkIn) + '</td>'
+        + '<td class="tabular-nums text-emerald-300">' + Genesis.fmtDur(Genesis.durationMin(l)) + '</td>'
+        + '<td><button data-force="' + l.id + '" class="btn-ghost rounded-lg px-3 py-1.5 text-[11px] !border-rose-400/30 hover:!border-rose-400 hover:!text-rose-300">Force out</button></td></tr>';
+    }).join('') : '<tr><td colspan="7" class="text-center text-slate-500 py-8">No active visitors in the hub.</td></tr>';
+    $('activeRows').querySelectorAll('[data-force]').forEach(function (b) {
+      b.onclick = function () {
+        var r = Genesis.forceCheckoutEntry(b.dataset.force);
+        if (r.ok) { toast(r.entry.name + ' was checked out (override).', 'info'); renderAll(); }
+      };
+    });
+  }
+
+  function renderAnalytics() {
+    var logs = Genesis.getLogs();
+    // donut
+    var m = Genesis.purposeBreakdown(logs), total = logs.length;
+    var entries = Object.keys(m).map(function (k) { return [k, m[k]]; }).sort(function (a, b) { return b[1] - a[1]; });
+    $('donutTotal').textContent = total;
+    if (total) {
+      var acc = 0, stops = entries.map(function (e, i) {
+        var a0 = acc / total * 360; acc += e[1]; return COLORS[i % COLORS.length] + ' ' + a0 + 'deg ' + (acc / total * 360) + 'deg';
+      });
+      $('donut').style.background = 'conic-gradient(' + stops.join(',') + ')';
+      $('legend').innerHTML = entries.map(function (e, i) {
+        return '<div class="flex items-center gap-2 min-w-0"><span class="w-2.5 h-2.5 rounded-sm shrink-0" style="background:' + COLORS[i % COLORS.length] + '"></span>'
+          + '<span class="text-slate-400 truncate">' + e[0] + '</span>'
+          + '<span class="ml-auto text-slate-200 font-semibold tabular-nums">' + e[1] + '</span>'
+          + '<span class="text-slate-600 tabular-nums w-9 text-right">' + Math.round(e[1] / total * 100) + '%</span></div>';
+      }).join('');
+    } else {
+      $('donut').style.background = 'rgba(148,163,184,.1)';
+      $('legend').innerHTML = '<div class="text-slate-500">No data yet.</div>';
+    }
+    // peak hours
+    var hist = Genesis.hourHistogram(logs), max = Math.max.apply(null, hist.concat([1])), bars = '';
+    for (var h = 8; h <= 19; h++) {
+      bars += '<div class="flex-1 flex flex-col justify-end h-full gap-1"><div class="text-center text-[9px] text-slate-500 tabular-nums">' + (hist[h] || '') + '</div>'
+        + '<div class="bar w-full' + (hist[h] === max && max > 1 ? ' peak' : '') + '" style="height:' + Math.round(hist[h] / max * 82) + '%" title="' + h + ':00 — ' + hist[h] + ' check-ins"></div></div>';
+    }
+    $('hourChart').innerHTML = bars;
+    // role mix
+    var rb = Genesis.roleBreakdown(logs), rmax = Math.max(1, Math.max.apply(null, Genesis.ROLES.map(function (r) { return rb[r] || 0; })));
+    $('roleBars').innerHTML = Genesis.ROLES.map(function (r, i) {
+      var v = rb[r] || 0;
+      return '<div><div class="flex justify-between text-xs mb-1"><span class="text-slate-400">' + r + '</span><span class="text-slate-200 font-semibold tabular-nums">' + v + '</span></div>'
+        + '<div class="h-1.5 rounded-full bg-slate-800 overflow-hidden"><div class="h-full rounded-full" style="width:' + (v / rmax * 100) + '%;background:' + COLORS[i] + '"></div></div></div>';
+    }).join('');
+    $('autoN').textContent = logs.filter(function (l) { return l.autoCheckout; }).length;
+    $('kioskN').textContent = logs.filter(function (l) { return l.src === 'kiosk'; }).length;
+  }
+
+  function renderLogs() {
+    var rows = filtered();
+    $('fltN').textContent = rows.length;
+    $('logRows').innerHTML = rows.length ? rows.slice(0, 300).map(function (l) {
+      return '<tr><td class="text-slate-400 tabular-nums">' + l.date + '</td>'
+        + '<td><span class="font-medium text-slate-100">' + l.name + '</span>' + (l.src === 'kiosk' ? ' <span class="badge b-kiosk !text-[9px] !py-0.5">QR</span>' : '') + '</td>'
+        + '<td class="font-mono text-xs text-sky-300">' + l.uid + '</td>'
+        + '<td class="text-slate-300">' + l.role + '</td>'
+        + '<td class="text-slate-400">' + l.purpose + '</td>'
+        + '<td class="tabular-nums text-slate-300">' + Genesis.timeStr(l.checkIn) + '</td>'
+        + '<td class="tabular-nums text-slate-300">' + (l.checkOut ? Genesis.timeStr(l.checkOut) : '—') + '</td>'
+        + '<td class="tabular-nums text-emerald-300">' + Genesis.fmtDur(Genesis.durationMin(l)) + '</td>'
+        + '<td>' + badge(l) + '</td>'
+        + '<td><button data-del="' + l.id + '" class="text-slate-600 hover:text-rose-400 transition-colors" title="Delete record">'
+        + '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a1 1 0 011-1h6a1 1 0 011 1v2M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" stroke-linecap="round" stroke-linejoin="round"/></svg></button></td></tr>';
+    }).join('') : '<tr><td colspan="10" class="text-center text-slate-500 py-8">No records match the current filters.</td></tr>';
+    $('logRows').querySelectorAll('[data-del]').forEach(function (b) {
+      b.onclick = function () {
+        if (confirm('Delete log record ' + b.dataset.del + '?')) { Genesis.deleteLog(b.dataset.del); toast('Record deleted.', 'info'); renderAll(); }
+      };
+    });
+  }
+
+  function renderAll() { renderStats(); renderActive(); renderAnalytics(); renderLogs(); }
+
+  /* ---------- actions ---------- */
+  $('btnCSV').onclick = function () {
+    var rows = filtered();
+    if (!rows.length) { toast('Nothing to export with current filters.', 'err'); return; }
+    Genesis.downloadCSV(rows, 'genesis-hub-logs-' + Genesis.dateStr() + '.csv');
+    toast(rows.length + ' records exported as CSV.', 'ok');
+  };
+  $('btnCSVall').onclick = function () {
+    var rows = Genesis.getLogs();
+    if (!rows.length) { toast('No data yet.', 'err'); return; }
+    Genesis.downloadCSV(rows, 'genesis-hub-FULL-' + Genesis.dateStr() + '.csv');
+    toast('Full log exported.', 'ok');
+  };
+  $('btnSweep').onclick = function () {
+    var n = Genesis.sweep();
+    toast(n ? n + ' stale session(s) auto-closed (7:00 PM IST rule).' : 'Sweep complete — no stale sessions found.', n ? 'ok' : 'info');
+    renderAll();
+  };
+  $('btnAll').onclick = function () {
+    if (!Genesis.countActive()) { toast('No active visitors.', 'info'); return; }
+    if (confirm('Force check-out ALL active visitors?')) { var n = Genesis.checkoutAll(); toast(n + ' visitor(s) checked out.', 'ok'); renderAll(); }
+  };
+  $('btnSeed').onclick = function () {
+    var n = Genesis.seedDemo();
+    toast(n + ' demo records generated.', 'ok'); renderAll();
+  };
+  $('btnClear').onclick = function () {
+    if (confirm('Erase ALL log data? This cannot be undone.') && confirm('Really sure? Consider exporting CSV first.')) {
+      Genesis.clearAll(); toast('All data erased.', 'info'); renderAll();
+    }
+  };
+
+  /* ---------- boot + live refresh ---------- */
+  var booted = false;
+  function boot() {
+    if (booted) return; booted = true;
+    Genesis.startSweep(30000);
+    renderAll();
+    setInterval(function () {
+      renderAll();
+      var t = Genesis.timeStr(), h = +t.slice(0, 2);
+      $('clockLine').textContent = (h % 12 || 12) + ':' + t.slice(3) + ' ' + (h >= 12 ? 'PM' : 'AM') + ' IST · auto check-out 7:00 PM';
+    }, 10000);
+    Genesis.onUpdate(renderAll); // other tabs (portal/kiosk) → instant refresh
+  }
+})();
+</script>
+</body>
+</html>

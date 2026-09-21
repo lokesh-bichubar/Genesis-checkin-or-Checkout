@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="The Genesis — Quantum University Innovation Council. Research, innovation & entrepreneurship hub with smart visitor check-in.">
+<title>The Genesis — Quantum University Innovation Council</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='5' fill='%2300A3FF'/%3E%3Cellipse cx='20' cy='20' rx='17' ry='7' fill='none' stroke='%2310B981' stroke-width='2' transform='rotate(-30 20 20)'/%3E%3C/svg%3E">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config = { theme: { extend: { colors: { electric: '#00A3FF', emer: '#10B981', abyss: '#04060C' }, fontFamily: { disp: ['Space Grotesk', 'sans-serif'] } } } }</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/genesis.css">
+</head>
+<body class="antialiased overflow-x-hidden">
+
+<!-- ambient background -->
+<div class="fixed inset-0 -z-10 pointer-events-none">
+  <div class="absolute inset-0 bg-grid"></div>
+  <div class="absolute -top-40 left-1/4 w-[36rem] h-[36rem] bg-glow-blue"></div>
+  <div class="absolute top-64 right-0 w-[30rem] h-[30rem] bg-glow-em"></div>
+</div>
+
+<!-- ============ NAV ============ -->
+<header class="fixed top-0 inset-x-0 z-40">
+  <nav class="max-w-7xl mx-auto px-4 sm:px-6 mt-4">
+    <div class="glass rounded-2xl px-4 sm:px-5 py-3 flex flex-wrap items-center justify-between gap-3">
+      <a href="index.html" class="flex items-center gap-3">
+        <svg viewBox="0 0 40 40" class="w-9 h-9 shrink-0" fill="none">
+          <defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#38BDF8"/><stop offset="1" stop-color="#10B981"/></linearGradient></defs>
+          <ellipse cx="20" cy="20" rx="17" ry="7" stroke="url(#lg)" stroke-width="1.6" transform="rotate(-30 20 20)" opacity=".9"/>
+          <ellipse cx="20" cy="20" rx="17" ry="7" stroke="url(#lg)" stroke-width="1.6" transform="rotate(30 20 20)" opacity=".55"/>
+          <circle cx="20" cy="20" r="4.5" fill="url(#lg)"/>
+        </svg>
+        <div>
+          <div class="font-disp font-bold text-lg leading-tight">The <span class="grad-text">Genesis</span></div>
+          <div class="text-[10px] tracking-[.2em] uppercase text-slate-500">Quantum University · Innovation Council</div>
+        </div>
+      </a>
+      <div class="hidden md:flex items-center gap-1 text-sm">
+        <a href="index.html" class="navlink active">Home</a>
+        <a href="checkin.html" class="navlink">Check-In Portal</a>
+        <a href="kiosk.html" class="navlink">Kiosk Mode</a>
+        <a href="admin.html" class="navlink">Admin</a>
+      </div>
+      <div class="flex items-center gap-3">
+        <div class="pill rounded-full px-3 py-1.5 text-xs flex items-center gap-2">
+          <span class="dot-live"></span>
+          <span class="text-slate-300"><b id="navOcc" class="font-disp text-emer">0</b> in hub</span>
+        </div>
+        <a href="checkin.html" class="btn-primary rounded-xl px-4 py-2 text-sm hidden sm:inline-flex">Check In</a>
+      </div>
+      <div class="flex md:hidden w-full gap-1 text-xs justify-center pt-1">
+        <a href="index.html" class="navlink active">Home</a>
+        <a href="checkin.html" class="navlink">Check-In</a>
+        <a href="kiosk.html" class="navlink">Kiosk</a>
+        <a href="admin.html" class="navlink">Admin</a>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<main class="pt-36 md:pt-40">
+
+  <!-- ============ HERO ============ -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6">
+    <div class="grid lg:grid-cols-2 gap-10 lg:gap-14 items-center">
+      <div class="fade-up">
+        <div class="inline-flex items-center gap-2 pill rounded-full px-4 py-1.5 text-xs text-sky-300 mb-6">
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z" stroke-linejoin="round"/></svg>
+          EST. TO IGNITE RESEARCH · INNOVATION · ENTREPRENEURSHIP
+        </div>
+        <h1 class="font-disp text-4xl sm:text-5xl xl:text-6xl font-bold leading-[1.06] tracking-tight">
+          Where ideas<br>become <span class="grad-text">ventures.</span>
+        </h1>
+        <p class="mt-6 text-slate-400 text-lg leading-relaxed max-w-xl">
+          The Genesis is Quantum University's launchpad for student researchers, faculty
+          innovators and startup founders. Walk in, check in with your Unique ID — and build.
+        </p>
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a href="checkin.html" class="btn-primary rounded-xl px-6 py-3.5 text-sm inline-flex items-center gap-2">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M15 12H3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Check In Now
+          </a>
+          <a href="kiosk.html" class="btn-ghost rounded-xl px-6 py-3.5 text-sm inline-flex items-center gap-2">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM20 14h1M14 20h1M20 20h1"/></svg>
+            Launch Kiosk
+          </a>
+          <a href="admin.html" class="btn-ghost rounded-xl px-6 py-3.5 text-sm">Admin Dashboard</a>
+        </div>
+        <div class="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-xs text-slate-500">
+          <span class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-electric"></span>Dynamic QR touchless check-in</span>
+          <span class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-emer"></span>Auto check-out 7:00 PM IST</span>
+          <span class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-violet-400"></span>CSV analytics export</span>
+        </div>
+      </div>
+
+      <!-- LIVE OCCUPANCY CARD -->
+      <div class="glass rounded-3xl p-6 sm:p-8 glow-blue fade-up relative overflow-hidden" style="animation-delay:.15s">
+        <div class="absolute -top-20 -right-20 w-64 h-64 bg-glow-em pointer-events-none"></div>
+        <div class="flex items-center justify-between mb-6">
+          <div class="flex items-center gap-2.5">
+            <span class="dot-live"></span>
+            <span class="text-xs font-bold tracking-[.18em] text-emer uppercase">Live Hub Status</span>
+          </div>
+          <span id="clock" class="font-disp text-sm text-slate-400 tabular-nums">--:-- IST</span>
+        </div>
+        <div class="flex items-end gap-4">
+          <div id="occBig" class="font-disp font-bold text-7xl sm:text-8xl leading-none text-emer tabular-nums floaty">0</div>
+          <div class="pb-2">
+            <div class="text-slate-200 font-semibold">people inside</div>
+            <div class="text-slate-500 text-sm">building right now</div>
+          </div>
+        </div>
+        <div id="roleChips" class="mt-6 flex flex-wrap gap-2"></div>
+        <div class="mt-6 pt-5 border-t border-slate-700/40 grid grid-cols-3 gap-3 text-center">
+          <div><div id="statToday" class="font-disp font-bold text-xl text-sky-300 tabular-nums">0</div><div class="text-[11px] text-slate-500 uppercase tracking-wider mt-1">visits today</div></div>
+          <div><div id="statFounders" class="font-disp font-bold text-xl text-emerald-300 tabular-nums">0</div><div class="text-[11px] text-slate-500 uppercase tracking-wider mt-1">founders in</div></div>
+          <div><div class="font-disp font-bold text-xl text-slate-200 tabular-nums">7:00<span class="text-sm">PM</span></div><div class="text-[11px] text-slate-500 uppercase tracking-wider mt-1">auto check-out</div></div>
+        </div>
+        <!-- hourly sparkline -->
+        <div class="mt-6">
+          <div class="text-[11px] text-slate-500 uppercase tracking-wider mb-2">Today's check-ins by hour</div>
+          <div id="spark" class="flex items-end gap-1 h-14"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ NOW IN THE HUB ============ -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 mt-16">
+    <div class="glass rounded-2xl px-5 sm:px-6 py-5">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="font-disp font-semibold text-slate-200 flex items-center gap-2 text-sm sm:text-base">
+          <span class="dot-live"></span> Now in the Hub
+        </h2>
+        <span class="text-xs text-slate-500">auto-check-out at 7:00 PM IST</span>
+      </div>
+      <div id="activeList" class="flex flex-wrap gap-2.5"></div>
+    </div>
+  </section>
+
+  <!-- ============ PILLARS ============ -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 mt-20">
+    <div class="text-center mb-10">
+      <h2 class="font-disp text-3xl sm:text-4xl font-bold">One council. <span class="grad-text">Three missions.</span></h2>
+    </div>
+    <div class="grid md:grid-cols-3 gap-5">
+      <div class="glass rounded-2xl p-7 hover:border-sky-400/40 transition-colors group">
+        <div class="w-11 h-11 rounded-xl bg-sky-400/10 border border-sky-400/30 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
+          <svg class="w-5 h-5 text-sky-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3h6M10 3v5.3L4.6 17a3 3 0 002.6 4.5h9.6a3 3 0 002.6-4.5L14 8.3V3" stroke-linecap="round" stroke-linejoin="round"/><path d="M7.5 14h9" stroke-linecap="round"/></svg>
+        </div>
+        <h3 class="font-disp font-bold text-lg mb-2">Research</h3>
+        <p class="text-slate-400 text-sm leading-relaxed">Funded labs, publication support and interdisciplinary projects across AI, quantum computing, materials and clean energy.</p>
+      </div>
+      <div class="glass rounded-2xl p-7 hover:border-emerald-400/40 transition-colors group">
+        <div class="w-11 h-11 rounded-xl bg-emerald-400/10 border border-emerald-400/30 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
+          <svg class="w-5 h-5 text-emerald-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6M10 21h4M12 3a6 6 0 00-4 10.5c.8.7 1 1.5 1 2.5h6c0-1 .2-1.8 1-2.5A6 6 0 0012 3z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3 class="font-disp font-bold text-lg mb-2">Innovation</h3>
+        <p class="text-slate-400 text-sm leading-relaxed">Hackathons, patent cell, prototype grants and a maker space that turns course projects into intellectual property.</p>
+      </div>
+      <div class="glass rounded-2xl p-7 hover:border-violet-400/40 transition-colors group">
+        <div class="w-11 h-11 rounded-xl bg-violet-400/10 border border-violet-400/30 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
+          <svg class="w-5 h-5 text-violet-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4.5 16.5L3 21l4.5-1.5M14.5 4a8 8 0 00-8 8l-.5.5L12 18.5l.5-.5a8 8 0 008-8 2.5 2.5 0 10-2.5-2.5A2.5 2.5 0 0014.5 4z" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 12a3 3 0 105.5-1.7" stroke-linecap="round"/></svg>
+        </div>
+        <h3 class="font-disp font-bold text-lg mb-2">Entrepreneurship</h3>
+        <p class="text-slate-400 text-sm leading-relaxed">Incubation, mentor networks, seed funding access and demo days for student & faculty-founded startups.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ HOW IT WORKS ============ -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 mt-20">
+    <div class="glass rounded-3xl p-7 sm:p-10 relative overflow-hidden">
+      <div class="absolute -bottom-24 -left-24 w-72 h-72 bg-glow-blue pointer-events-none"></div>
+      <h2 class="font-disp text-2xl sm:text-3xl font-bold mb-8">Check in. <span class="grad-text">Build. Check out.</span></h2>
+      <div class="grid sm:grid-cols-3 gap-6">
+        <div class="flex gap-4">
+          <div class="font-disp font-bold text-3xl text-sky-400/80">01</div>
+          <div><h4 class="font-semibold mb-1.5">Bring your Unique ID</h4>
+            <p class="text-sm text-slate-400 leading-relaxed">Roll No for students, Employee ID for faculty, Startup ID for founders — guests get one auto-generated at the door.</p></div>
+        </div>
+        <div class="flex gap-4">
+          <div class="font-disp font-bold text-3xl text-emerald-400/80">02</div>
+          <div><h4 class="font-semibold mb-1.5">Check in touch-free</h4>
+            <p class="text-sm text-slate-400 leading-relaxed">Scan the rotating entrance QR with your phone, or use the web portal. Returning visitors are auto-recognized.</p></div>
+        </div>
+        <div class="flex gap-4">
+          <div class="font-disp font-bold text-3xl text-violet-400/80">03</div>
+          <div><h4 class="font-semibold mb-1.5">Leave anytime — or not</h4>
+            <p class="text-sm text-slate-400 leading-relaxed">Check out with one tap. Forget? Every open session closes automatically at <b class="text-slate-300">7:00 PM IST</b>, flagged <code class="text-amber-300">auto_checkout</code>.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ APP TILES ============ -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 mt-16 mb-8">
+    <div class="grid md:grid-cols-3 gap-5">
+      <a href="checkin.html" class="glass rounded-2xl p-6 hover:border-emerald-400/50 hover:glow-em transition-all group">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="font-disp font-bold">Check-In Portal</h3>
+          <svg class="w-5 h-5 text-emerald-300 group-hover:translate-x-1 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <p class="text-sm text-slate-400">For students, faculty, founders & guests — on any phone or laptop browser.</p>
+      </a>
+      <a href="kiosk.html" class="glass rounded-2xl p-6 hover:border-sky-400/50 hover:glow-blue transition-all group">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="font-disp font-bold">Kiosk Mode</h3>
+          <svg class="w-5 h-5 text-sky-300 group-hover:translate-x-1 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <p class="text-sm text-slate-400">Full-screen entrance display with a rotating touchless QR code + live occupancy.</p>
+      </a>
+      <a href="admin.html" class="glass rounded-2xl p-6 hover:border-violet-400/50 transition-all group">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="font-disp font-bold">Admin Dashboard</h3>
+          <svg class="w-5 h-5 text-violet-300 group-hover:translate-x-1 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <p class="text-sm text-slate-400">Real-time visitors, purpose & peak-hour analytics, CSV export, manual overrides.</p>
+      </a>
+    </div>
+  </section>
+</main>
+
+<footer class="border-t border-slate-800/60 mt-16">
+  <div class="max-w-7xl mx-auto px-6 py-10 text-xs sm:text-sm text-slate-500 flex flex-col sm:flex-row justify-between gap-3">
+    <div>© 2026 The Genesis — Quantum University Innovation Council · Roorkee, Uttarakhand</div>
+    <div>Hub hours 8:00 AM – 7:00 PM IST · Nightly auto check-out · Data persisted in LocalStorage</div>
+  </div>
+</footer>
+
+<script src="js/genesis.js"></script>
+<script>
+(function () {
+  'use strict';
+  Genesis.startSweep(30000); // background 7PM IST auto-checkout engine
+
+  var ROLE_G = { Student: 'from-sky-400 to-blue-600', Faculty: 'from-violet-400 to-purple-600', Founder: 'from-emerald-400 to-teal-600', Guest: 'from-amber-400 to-orange-500' };
+  var shown = 0;
+
+  function initials(n) { return n.split(/\s+/).map(function (w) { return w[0]; }).join('').slice(0, 2).toUpperCase(); }
+
+  function animOcc(n) {
+    var el = document.getElementById('occBig');
+    if (n === shown) { el.textContent = n; return; }
+    var from = shown; shown = n; var t0 = performance.now();
+    requestAnimationFrame(function step(t) {
+      var p = Math.min(1, (t - t0) / 450), e = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(from + (n - from) * e);
+      if (p < 1) requestAnimationFrame(step);
+    });
+  }
+
+  function render() {
+    var logs = Genesis.getLogs();
+    var act = logs.filter(function (l) { return !l.checkOut; });
+    animOcc(act.length);
+    var nav = document.getElementById('navOcc'); if (nav) nav.textContent = act.length;
+
+    // role chips
+    var rb = Genesis.roleBreakdown(act), chips = '';
+    Genesis.ROLES.forEach(function (r) {
+      if (rb[r]) chips += '<span class="pill rounded-full px-3 py-1 text-xs text-slate-300"><b class="text-sky-300 font-disp">' + rb[r] + '</b> ' + r.toLowerCase() + (rb[r] > 1 ? 's' : '') + '</span>';
+    });
+    document.getElementById('roleChips').innerHTML = chips || '<span class="text-xs text-slate-500">The hub is empty — be the first to check in today.</span>';
+
+    // stats
+    var today = Genesis.dateStr();
+    var todays = logs.filter(function (l) { return l.date === today; });
+    document.getElementById('statToday').textContent = todays.length;
+    document.getElementById('statFounders').textContent = act.filter(function (l) { return l.role === 'Founder'; }).length;
+
+    // sparkline (8:00–19:00 IST)
+    var hist = Genesis.hourHistogram(todays), max = Math.max.apply(null, hist.concat([1])), bars = '';
+    for (var h = 8; h <= 19; h++) {
+      bars += '<div class="flex-1 bar' + (hist[h] === max && max > 1 ? ' peak' : '') + '" style="height:' + Math.round(hist[h] / max * 100) + '%" title="' + h + ':00 — ' + hist[h] + ' check-ins"></div>';
+    }
+    document.getElementById('spark').innerHTML = bars;
+
+    // active list
+    var list = act.slice(0, 9).map(function (l) {
+      return '<span class="pill rounded-full pl-1.5 pr-2.5 py-1.5 text-xs inline-flex items-center gap-2">'
+        + '<span class="w-6 h-6 rounded-full bg-gradient-to-br ' + ROLE_G[l.role] + ' flex items-center justify-center text-[10px] font-bold text-slate-950">' + initials(l.name) + '</span>'
+        + '<span class="text-slate-200 font-medium">' + l.name.split(' ')[0] + '</span>'
+        + '<span class="text-slate-500">·</span><span class="text-slate-400">' + l.purpose + '</span>'
+        + '</span>';
+    }).join('');
+    if (act.length > 9) list += '<span class="pill rounded-full px-3 py-1.5 text-xs text-slate-400">+' + (act.length - 9) + ' more</span>';
+    document.getElementById('activeList').innerHTML = list || '<span class="text-sm text-slate-500">Nobody checked in yet. <a class="text-emer underline underline-offset-2" href="checkin.html">Check in →</a></span>';
+  }
+
+  function clock() {
+    var t = Genesis.timeStr(), h = +t.slice(0, 2), ap = h >= 12 ? 'PM' : 'AM';
+    document.getElementById('clock').textContent = (h % 12 || 12) + ':' + t.slice(3) + ' ' + ap + ' IST';
+  }
+
+  render(); clock();
+  setInterval(render, 3000);
+  setInterval(clock, 1000);
+  Genesis.onUpdate(render);
+})();
+</script>
+</body>
+</html>
